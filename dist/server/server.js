@@ -21,6 +21,7 @@ class Server {
                     router.applyRoutes(this.application);
                 }
                 this.application.use(restify.plugins.queryParser());
+                this.application.use(restify.plugins.bodyParser());
                 this.application.listen(environment_1.environment.server.port, () => {
                     resolve(this.application);
                 });
