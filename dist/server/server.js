@@ -4,6 +4,7 @@ const restify = require("restify");
 const environment_1 = require("./../common/environment");
 const mongoose = require("mongoose");
 const merge_patch_parser_1 = require("./merge-patch.parser");
+const errorHandler_1 = require("./errorHandler");
 class Server {
     initializeDb() {
         return mongoose.connect(environment_1.environment.db.url, {
@@ -27,6 +28,7 @@ class Server {
                 this.application.listen(environment_1.environment.server.port, () => {
                     resolve(this.application);
                 });
+                this.application.on('restifyError', errorHandler_1.handleError);
             }
             catch (error) {
                 reject(error);
