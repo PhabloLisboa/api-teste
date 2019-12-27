@@ -16,7 +16,7 @@ class UsersRouter extends router_1.Router {
             user.save().then(this.render(res, next)).catch(next);
         });
         application.put('/users/:id', (req, res, next) => {
-            const options = { overwrite: true };
+            const options = { runValidators: true, overwrite: true };
             users_model_1.User.update({ _id: req.params.id }, req.body, options)
                 .exec().then(result => {
                 if (result.n) {
@@ -28,7 +28,7 @@ class UsersRouter extends router_1.Router {
             }).then(this.render(res, next)).catch(next);
         });
         application.patch('/users/:id', (req, res, next) => {
-            const options = { new: true };
+            const options = { runValidators: true, new: true };
             users_model_1.User.findByIdAndUpdate(req.params.id, req.body, options)
                 .then(this.render(res, next)).catch(next);
         });
