@@ -21,5 +21,18 @@ class Router extends events_1.EventEmitter {
             return next();
         };
     }
+    renderAll(resp, next) {
+        return (documents) => {
+            if (documents) {
+                documents.forEach(document => {
+                    this.emit('beforeRnder', document);
+                });
+                resp.json(documents);
+            }
+            else {
+                resp.json([]);
+            }
+        };
+    }
 }
 exports.Router = Router;
