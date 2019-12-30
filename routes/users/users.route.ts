@@ -1,8 +1,6 @@
 import * as restify from 'restify'
 import {ModelRouter} from '../../common/model-router'
 import { User } from '../../users/users.model'
-import { response } from 'spdy'
-import { NotFoundError } from 'restify-errors'
 
 
 
