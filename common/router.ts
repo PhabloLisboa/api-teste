@@ -19,6 +19,10 @@ export abstract class Router extends EventEmitter{
         return document
     }
 
+    envelopeAll(documents: any[], options: any = {}): any {
+       return documents
+    }
+
     render(resp: restify.Response, next){
         return (document) => {
             if(document){
@@ -27,22 +31,22 @@ export abstract class Router extends EventEmitter{
             }else{
                 throw new NotFoundError('Documento Não Encontrado')
             }
-            return next()
+            return next(false)
         }
     }
 
-    renderAll(resp: restify.Response, next){
+    renderAll(resp: restify.Response, next, options: any = {}){
         return(documents: any[]) => {
             if(documents){
                 documents.forEach((document, index, array) => {
                     this.emit('beforeRnder', document)
                     array[index] = this.envelope(document)
                 })
-                resp.json(documents)
+                resp.json(this.envelopeAll(documents, options))
             }else{
                 resp.json([])
             }
-            return next()
+            return next(false)
         }
     }
 }

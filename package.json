@@ -4,21 +4,36 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "jest": {
+    "moduleNameMapper": {
+      "^@App/(.*)$": "<rootDir>/src/$1",
+      "^lib/(.*)$": "<rootDir>/common/$1"
+    },
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    }
+  },
   "dependencies": {
     "mongoose": "5.8.1",
     "restify": "^8.5.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/jest": "^24.0.25",
     "@types/mongoose": "^5.5.34",
     "@types/restify": "^8.4.2",
     "@types/restify-errors": "^4.3.3",
+    "@types/supertest": "^2.0.8",
     "bcrypt": "^3.0.7",
-    "restify-errors": "^8.0.2"
+    "jest": "^24.9.0",
+    "restify-errors": "^8.0.2",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.2.0",
+    "typescript": "^3.7.4"
   }
 }
