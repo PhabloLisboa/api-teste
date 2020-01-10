@@ -5,6 +5,7 @@ const environment_1 = require("./../common/environment");
 const mongoose = require("mongoose");
 const merge_patch_parser_1 = require("./merge-patch.parser");
 const errorHandler_1 = require("./errorHandler");
+const token_parser_1 = require("../security/token.parser");
 class Server {
     initializeDb() {
         return mongoose.connect(environment_1.environment.db.url, {
@@ -25,6 +26,7 @@ class Server {
                 this.application.use(restify.plugins.queryParser());
                 this.application.use(restify.plugins.bodyParser());
                 this.application.use(merge_patch_parser_1.mergePatchBodyParser);
+                this.application.use(token_parser_1.tokenParser);
                 this.application.listen(environment_1.environment.server.port, () => {
                     resolve(this.application);
                 });
