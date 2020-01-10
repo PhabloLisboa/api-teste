@@ -28,12 +28,14 @@ function extractToken(req: restify.Request){
 
 function applyBearer(req: restify.Request, next): (errer, decoded) => void{
     return (error, decoded) =>{
+        
         if(decoded){
             User.findByEmail(decoded.sub).then(user =>{
                 if(user){
                     (<any>req).authenticated = user
                 }
-            })
+                next()
+            }).catch(next)
         }else{
             next()
         }

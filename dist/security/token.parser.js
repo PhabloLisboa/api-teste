@@ -30,7 +30,8 @@ function applyBearer(req, next) {
                 if (user) {
                     req.authenticated = user;
                 }
-            });
+                next();
+            }).catch(next);
         }
         else {
             next();

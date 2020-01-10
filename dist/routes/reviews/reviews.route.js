@@ -22,7 +22,7 @@ class ReviewsRouter extends model_router_1.ModelRouter {
     applyRoutes(application) {
         application.get(`${this.basePath}`, this.findAll);
         application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
-        application.post(`${this.basePath}`, this.save);
+        application.post(`${this.basePath}`, [authorize('user'), this.save]);
     }
 }
 exports.reviewsRouter = new ReviewsRouter();
