@@ -2,6 +2,7 @@ import * as restify from 'restify'
 import {ModelRouter} from '../../common/model-router'
 import { Review } from '../../reviews/reviwes.model'
 import { NotFoundError } from 'restify-errors'
+import { authorize } from '../../security/authz.handler'
 
 class ReviewsRouter extends ModelRouter<Review>{
     constructor(){

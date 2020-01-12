@@ -5,6 +5,8 @@ import * as mongoose from 'mongoose'
 import {mergePatchBodyParser} from './merge-patch.parser'
 import {handleError} from './errorHandler'
 import { tokenParser } from '../security/token.parser'
+
+import * as fs from 'fs'
 export class Server{
 
     application: restify.Server
@@ -22,7 +24,10 @@ export class Server{
 
                 this.application = restify.createServer({
                     name: 'Teste API',
-                    version: '1.0.0'
+                    version: '1.0.0',
+                    certificate: fs.readFileSync('./security/keys/cert.pem'),
+                    key: fs.readFileSync('./security/keys/key.pem')
+
                 })
 
                 for( let router of routers){

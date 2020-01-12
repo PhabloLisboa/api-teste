@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const merge_patch_parser_1 = require("./merge-patch.parser");
 const errorHandler_1 = require("./errorHandler");
 const token_parser_1 = require("../security/token.parser");
+const fs = require("fs");
 class Server {
     initializeDb() {
         return mongoose.connect(environment_1.environment.db.url, {
@@ -18,7 +19,9 @@ class Server {
             try {
                 this.application = restify.createServer({
                     name: 'Teste API',
-                    version: '1.0.0'
+                    version: '1.0.0',
+                    certificate: fs.readFileSync('./security/keys/cert.pem'),
+                    key: fs.readFileSync('./security/keys/key.pem')
                 });
                 for (let router of routers) {
                     router.applyRoutes(this.application);
