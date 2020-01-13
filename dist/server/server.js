@@ -7,6 +7,7 @@ const merge_patch_parser_1 = require("./merge-patch.parser");
 const errorHandler_1 = require("./errorHandler");
 const token_parser_1 = require("../security/token.parser");
 const fs = require("fs");
+const logger_1 = require("../common/logger");
 class Server {
     initializeDb() {
         return mongoose.connect(environment_1.environment.db.url, {
@@ -17,12 +18,16 @@ class Server {
     initRoutes(routers = []) {
         return new Promise((resolve, reject) => {
             try {
-                this.application = restify.createServer({
+                const options = {
                     name: 'Teste API',
                     version: '1.0.0',
-                    certificate: fs.readFileSync('./security/keys/cert.pem'),
-                    key: fs.readFileSync('./security/keys/key.pem')
-                });
+                    log: logger_1.logger
+                };
+                if (environment_1.environment.security.enableHTTPS) {
+                    options.certificate = fs.readFileSync(environment_1.environment.security.certificate),
+                        options.key = fs.readFileSync(environment_1.environment.security.key);
+                }
+                this.application = restify.createServer(options);
                 for (let router of routers) {
                     router.applyRoutes(this.application);
                 }
@@ -30,6 +35,7 @@ class Server {
                 this.application.use(restify.plugins.bodyParser());
                 this.application.use(merge_patch_parser_1.mergePatchBodyParser);
                 this.application.use(token_parser_1.tokenParser);
+                this.application.pre(restify.plugins.requestLogger({ log: logger_1.logger }));
                 this.application.listen(environment_1.environment.server.port, () => {
                     resolve(this.application);
                 });
