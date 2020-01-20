@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const merge_patch_parser_1 = require("./merge-patch.parser");
 const errorHandler_1 = require("./errorHandler");
 const token_parser_1 = require("../security/token.parser");
+const corsMiddleware = require("restify-cors-middleware");
 const fs = require("fs");
 const logger_1 = require("../common/logger");
 class Server {
@@ -28,9 +29,18 @@ class Server {
                         options.key = fs.readFileSync(environment_1.environment.security.key);
                 }
                 this.application = restify.createServer(options);
+                const corsOptions = {
+                    preflightMaxAge: 10,
+                    origins: ['*'],
+                    allowHeaders: ['authorization'],
+                    exposeHeaders: ['x-custom-header']
+                };
+                const cors = corsMiddleware(corsOptions);
+                this.application.pre(cors.preflight);
                 for (let router of routers) {
                     router.applyRoutes(this.application);
                 }
+                this.application.use(cors.actual);
                 this.application.use(restify.plugins.queryParser());
                 this.application.use(restify.plugins.bodyParser());
                 this.application.use(merge_patch_parser_1.mergePatchBodyParser);

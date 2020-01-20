@@ -5,6 +5,7 @@ import * as mongoose from 'mongoose'
 import {mergePatchBodyParser} from './merge-patch.parser'
 import {handleError} from './errorHandler'
 import { tokenParser } from '../security/token.parser'
+import * as corsMiddleware from 'restify-cors-middleware'
 
 import * as fs from 'fs'
 import { logger } from '../common/logger'
@@ -36,10 +37,22 @@ export class Server{
 
                 this.application = restify.createServer(options)
 
+                const corsOptions: corsMiddleware.Options = {
+                    preflightMaxAge: 10,
+                    origins: ['*'],
+                    allowHeaders: ['authorization'],
+                    exposeHeaders: ['x-custom-header']
+                }
+
+                const cors: corsMiddleware.CorsMiddleware = corsMiddleware(corsOptions)
+
+                this.application.pre(cors.preflight)
+
                 for( let router of routers){
                     router.applyRoutes(this.application)
                 }
                 
+                this.application.use(cors.actual)
                 this.application.use(restify.plugins.queryParser())
                 this.application.use(restify.plugins.bodyParser())
                 this.application.use(mergePatchBodyParser)
